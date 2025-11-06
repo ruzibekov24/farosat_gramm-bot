@@ -173,7 +173,7 @@ async def top10_handler(message: types.Message):
     text = "🏆 <b>Chat Top-10 Farosatchilar:</b>\n\n"
     for i, user in enumerate(top_users, start=1):
         name = user[0] or "Anonim"
-        text += f"{i}. {name} — {user[1]} gram\n"
+        text += f"{i}. {@name} — {user[1]} gram\n"
     await message.answer(text)
 
 # 🔹 /worldtop10 (dunyo bo‘yicha)
@@ -239,3 +239,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
