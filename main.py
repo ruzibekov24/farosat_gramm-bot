@@ -197,17 +197,27 @@ async def pic_farosat_handler(message: types.Message):
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
+    # Rasm yaratish
     img = Image.new('RGB', (500, 300), color=(30, 40, 80))
     draw = ImageDraw.Draw(img)
-    font = ImageFont.load_default()
+
+    # Font yuklash (Windows uchun)
+    try:
+        font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 26)
+    except:
+        font = ImageFont.load_default()
+
     draw.text((20, 50), f"{user.full_name}", fill=(255, 255, 0), font=font)
     draw.text((20, 120), f"Farosat: {farosat_value} gram", fill=(255, 255, 255), font=font)
 
+    # BytesIO ga saqlash
     bio = io.BytesIO()
-    bio.name = 'farosat.png'
     img.save(bio, 'PNG')
     bio.seek(0)
-    await message.answer_photo(photo=types.InputFile(bio))
+
+    # Rasmni yuborish
+    await message.answer_photo(photo=bio, caption="🧠 Sizning farosatingiz rasmda!")
+
 
 # 🔹 /mycertificate
 @dp.message(F.text.regexp(r"^/mycertificate(@\w+)?$"))
@@ -218,18 +228,25 @@ async def certificate_handler(message: types.Message):
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
+    # Sertifikat rasmi
     img = Image.new('RGB', (600, 400), color=(220, 200, 160))
     draw = ImageDraw.Draw(img)
-    font = ImageFont.load_default()
-    draw.text((50, 100), "🏅 SERTIFIKAT 🏅", fill=(0, 0, 0), font=font)
-    draw.text((50, 180), f"{user.full_name}", fill=(0, 0, 0), font=font)
-    draw.text((50, 250), f"Farosat: {farosat_value} gram", fill=(0, 0, 0), font=font)
 
+    try:
+        font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 28)
+    except:
+        font = ImageFont.load_default()
+
+    draw.text((150, 80), "🏅 SERTIFIKAT 🏅", fill=(0, 0, 0), font=font)
+    draw.text((80, 180), f"{user.full_name}", fill=(0, 0, 0), font=font)
+    draw.text((80, 260), f"Farosat: {farosat_value} gram", fill=(0, 0, 0), font=font)
+
+    # BytesIO orqali yuborish
     bio = io.BytesIO()
-    bio.name = 'certificate.png'
     img.save(bio, 'PNG')
     bio.seek(0)
-    await message.answer_photo(photo=types.InputFile(bio))
+
+    await message.answer_photo(photo=bio, caption="🎖️ Sizning Farosat Sertifikatingiz!")
 
 # 🔹 Botni ishga tushirish
 async def main():
@@ -239,5 +256,6 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
