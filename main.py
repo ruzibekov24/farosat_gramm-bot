@@ -192,36 +192,39 @@ from aiogram import types
 from PIL import Image, ImageDraw, ImageFont
 import io
 
+from aiogram import types
+from PIL import Image, ImageDraw, ImageFont
+import io
+
 # 🔹 /pic_farosat
 @dp.message(F.text.regexp(r"^/pic_farosat(@\w+)?$"))
 async def pic_farosat_handler(message: types.Message):
     user = message.from_user
     chat_id = message.chat.id
-
     cursor.execute("SELECT farosat FROM farosat_log WHERE user_id=? AND chat_id=?", (user.id, chat_id))
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
-    # 🔸 Rasm chizish
+    # 🔸 Rasm yaratish
     img = Image.new("RGB", (500, 300), color=(30, 40, 80))
     draw = ImageDraw.Draw(img)
 
     try:
-        font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 26)
+        font = ImageFont.truetype("arial.ttf", 26)
     except:
         font = ImageFont.load_default()
 
     draw.text((20, 50), f"{user.full_name}", fill=(255, 255, 0), font=font)
     draw.text((20, 120), f"Farosat: {farosat_value} gram", fill=(255, 255, 255), font=font)
 
-    # 🔸 Xotiraga saqlash
+    # 🔸 Xotiraga yozish
     bio = io.BytesIO()
     img.save(bio, format="PNG")
     bio.seek(0)
 
-    # 🔸 BufferedInputFile orqali yuborish
-    input_file = types.BufferedInputFile(bio.getvalue(), filename="farosat.png")
-    await message.answer_photo(photo=input_file, caption="🧠 Sizning farosatingiz rasmda!")
+    # 🔸 Aiogram 3 uchun to‘g‘ri variant
+    photo = types.BufferedInputFile(bio.getvalue(), filename="farosat.png")
+    await message.answer_photo(photo=photo, caption="🧠 Sizning farosatingiz rasmda!")
 
 
 # 🔹 /mycertificate
@@ -229,16 +232,16 @@ async def pic_farosat_handler(message: types.Message):
 async def certificate_handler(message: types.Message):
     user = message.from_user
     chat_id = message.chat.id
-
     cursor.execute("SELECT farosat FROM farosat_log WHERE user_id=? AND chat_id=?", (user.id, chat_id))
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
+    # 🔸 Sertifikat yaratish
     img = Image.new("RGB", (600, 400), color=(220, 200, 160))
     draw = ImageDraw.Draw(img)
 
     try:
-        font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 28)
+        font = ImageFont.truetype("arial.ttf", 28)
     except:
         font = ImageFont.load_default()
 
@@ -250,8 +253,8 @@ async def certificate_handler(message: types.Message):
     img.save(bio, format="PNG")
     bio.seek(0)
 
-    input_file = types.BufferedInputFile(bio.getvalue(), filename="certificate.png")
-    await message.answer_photo(photo=input_file, caption="🎖️ Sizning Farosat Sertifikatingiz!")
+    photo = types.BufferedInputFile(bio.getvalue(), filename="certificate.png")
+    await message.answer_photo(photo=photo, caption="🎖️ Sizning Farosat Sertifikatingiz!")
 
 
 # 🔹 Botni ishga tushirish
@@ -262,6 +265,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
