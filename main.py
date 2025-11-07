@@ -193,15 +193,15 @@ async def world_top10_handler(message: types.Message):
 async def pic_farosat_handler(message: types.Message):
     user = message.from_user
     chat_id = message.chat.id
+
     cursor.execute("SELECT farosat FROM farosat_log WHERE user_id=? AND chat_id=?", (user.id, chat_id))
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
-    # Rasm yaratish
+    # 🔸 Rasm tayyorlash
     img = Image.new('RGB', (500, 300), color=(30, 40, 80))
     draw = ImageDraw.Draw(img)
 
-    # Font yuklash (Windows uchun)
     try:
         font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 26)
     except:
@@ -210,13 +210,15 @@ async def pic_farosat_handler(message: types.Message):
     draw.text((20, 50), f"{user.full_name}", fill=(255, 255, 0), font=font)
     draw.text((20, 120), f"Farosat: {farosat_value} gram", fill=(255, 255, 255), font=font)
 
-    # BytesIO ga saqlash
+    # 🔸 BytesIO ga saqlaymiz
     bio = io.BytesIO()
-    img.save(bio, 'PNG')
+    img.save(bio, format="PNG")
     bio.seek(0)
 
-    # Rasmni yuborish
-    await message.answer_photo(photo=bio, caption="🧠 Sizning farosatingiz rasmda!")
+    # 🔸 Telegramga yuborish uchun to‘g‘ri shaklda beramiz
+    input_file = types.BufferedInputFile(bio.getvalue(), filename="farosat.png")
+
+    await message.answer_photo(photo=input_file, caption="🧠 Sizning farosatingiz rasmda!")
 
 
 # 🔹 /mycertificate
@@ -224,11 +226,12 @@ async def pic_farosat_handler(message: types.Message):
 async def certificate_handler(message: types.Message):
     user = message.from_user
     chat_id = message.chat.id
+
     cursor.execute("SELECT farosat FROM farosat_log WHERE user_id=? AND chat_id=?", (user.id, chat_id))
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
-    # Sertifikat rasmi
+    # 🔸 Sertifikat rasmi
     img = Image.new('RGB', (600, 400), color=(220, 200, 160))
     draw = ImageDraw.Draw(img)
 
@@ -241,12 +244,14 @@ async def certificate_handler(message: types.Message):
     draw.text((80, 180), f"{user.full_name}", fill=(0, 0, 0), font=font)
     draw.text((80, 260), f"Farosat: {farosat_value} gram", fill=(0, 0, 0), font=font)
 
-    # BytesIO orqali yuborish
     bio = io.BytesIO()
-    img.save(bio, 'PNG')
+    img.save(bio, format="PNG")
     bio.seek(0)
 
-    await message.answer_photo(photo=bio, caption="🎖️ Sizning Farosat Sertifikatingiz!")
+    input_file = types.BufferedInputFile(bio.getvalue(), filename="certificate.png")
+
+    await message.answer_photo(photo=input_file, caption="🎖️ Sizning Farosat Sertifikatingiz!")
+
 
 # 🔹 Botni ishga tushirish
 async def main():
@@ -256,6 +261,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
