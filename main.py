@@ -188,6 +188,10 @@ async def world_top10_handler(message: types.Message):
         text += f"{i}. {name} — {grams} gram\n"
     await message.answer(text)
 
+from aiogram import types
+from PIL import Image, ImageDraw, ImageFont
+import io
+
 # 🔹 /pic_farosat
 @dp.message(F.text.regexp(r"^/pic_farosat(@\w+)?$"))
 async def pic_farosat_handler(message: types.Message):
@@ -198,8 +202,8 @@ async def pic_farosat_handler(message: types.Message):
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
-    # 🔸 Rasm tayyorlash
-    img = Image.new('RGB', (500, 300), color=(30, 40, 80))
+    # 🔸 Rasm chizish
+    img = Image.new("RGB", (500, 300), color=(30, 40, 80))
     draw = ImageDraw.Draw(img)
 
     try:
@@ -210,14 +214,13 @@ async def pic_farosat_handler(message: types.Message):
     draw.text((20, 50), f"{user.full_name}", fill=(255, 255, 0), font=font)
     draw.text((20, 120), f"Farosat: {farosat_value} gram", fill=(255, 255, 255), font=font)
 
-    # 🔸 BytesIO ga saqlaymiz
+    # 🔸 Xotiraga saqlash
     bio = io.BytesIO()
     img.save(bio, format="PNG")
     bio.seek(0)
 
-    # 🔸 Telegramga yuborish uchun to‘g‘ri shaklda beramiz
+    # 🔸 BufferedInputFile orqali yuborish
     input_file = types.BufferedInputFile(bio.getvalue(), filename="farosat.png")
-
     await message.answer_photo(photo=input_file, caption="🧠 Sizning farosatingiz rasmda!")
 
 
@@ -231,8 +234,7 @@ async def certificate_handler(message: types.Message):
     result = cursor.fetchone()
     farosat_value = result[0] if result else 0
 
-    # 🔸 Sertifikat rasmi
-    img = Image.new('RGB', (600, 400), color=(220, 200, 160))
+    img = Image.new("RGB", (600, 400), color=(220, 200, 160))
     draw = ImageDraw.Draw(img)
 
     try:
@@ -249,7 +251,6 @@ async def certificate_handler(message: types.Message):
     bio.seek(0)
 
     input_file = types.BufferedInputFile(bio.getvalue(), filename="certificate.png")
-
     await message.answer_photo(photo=input_file, caption="🎖️ Sizning Farosat Sertifikatingiz!")
 
 
@@ -261,6 +262,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
